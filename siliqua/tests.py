@@ -62,25 +62,21 @@ class PadraoTest(TestCase):
 class DecisaoTest(TestCase):
 
     def setUp(self):
-        #self.tagDecisao = TagDecisao.objects.create(nome="tagdecisao")
         self.tipoPadrao = TipoPadrao.objects.create(nome="padrao")
         self.tipoDecisao = TipoDecisao.objects.create(nome="tipo de decisao")
         self.decisao = Decisao.objects.create(nome="decisao", descricao="descricao", objetivo="objetivo", motivacao="motivacao",
                                                 tipoDeDecisao=self.tipoDecisao, escopo="escopo", hipoteses="hipoteses", restricoes="restricoes",
                                                 alternativas="alternativas", implicacoes="implicacoes", necessidades="necessidades",
                                                 notas="notas", estado='Aprovado')
-
-
-        self.decisao.decisaoRelacionada.create(nome="decisao", descricao="descricao", objetivo="objetivo", motivacao="motivacao",
-                                                tipoDeDecisao=self.tipoDecisao, escopo="escopo", hipoteses="hipoteses", restricoes="restricoes",
-                                                alternativas="alternativas", implicacoes="implicacoes", necessidades="necessidades",
-                                                notas="notas", estado='Aprovado', categorias=[1])
-        self.decisao.decisaoRelacionada.create(nome="decisao", descricao="descricao", objetivo="objetivo", motivacao="motivacao",
-                                                tipoDeDecisao=self.tipoDecisao, escopo="escopo", hipoteses="hipoteses", restricoes="restricoes",
-                                                alternativas="alternativas", implicacoes="implicacoes", necessidades="necessidades",
-                                                notas="notas", estado='Aprovado', categoria="categoria")
-
         self.decisao.categorias.create(nome="tagdecisao")
+
+        self.decisaoRelacionada = self.decisao.decisaoRelacionada.create(nome="decisao", descricao="descricao", objetivo="objetivo", motivacao="motivacao",
+                                                tipoDeDecisao=self.tipoDecisao, escopo="escopo", hipoteses="hipoteses", restricoes="restricoes",
+                                                alternativas="alternativas", implicacoes="implicacoes", necessidades="necessidades",
+                                                notas="notas", estado='Aprovado')
+        self.decisaoRelacionada.categorias.create(nome="tagdecisao")
+
+
 
         self.decisao.padraoUtilizado.create(nome="padrao", aliase="aliase", contexto="contexto",
                                             problema="problema", vantagens="vantagens", desvantagens="desvantagens",
@@ -88,7 +84,7 @@ class DecisaoTest(TestCase):
 
     def test_models(self):
         decisoes = Decisao.objects.all()
-        self.assertEqual(decisoes.count(), 3)
+        self.assertEqual(decisoes.count(), 2)
 
 
 
@@ -122,12 +118,12 @@ class PaginaPesquisa(TestCase):
         self.decisao = Decisao.objects.create(nome="decisao", descricao="descricao", objetivo="objetivo", motivacao="motivacao",
                                                 tipoDeDecisao=self.tipoDecisao, escopo="escopo", hipoteses="hipoteses", restricoes="restricoes",
                                                 alternativas="alternativas", implicacoes="implicacoes", necessidades="necessidades",
-                                                notas="notas", estado='Aprovado', categoria="categoria")
+                                                notas="notas", estado='Aprovado')
 
         self.decisao.decisaoRelacionada.create(nome="decisao", descricao="descricao", objetivo="objetivo", motivacao="motivacao",
                                                 tipoDeDecisao=self.tipoDecisao, escopo="escopo", hipoteses="hipoteses", restricoes="restricoes",
                                                 alternativas="alternativas", implicacoes="implicacoes", necessidades="necessidades",
-                                                notas="notas", estado='Aprovado', categoria="categoria")
+                                                notas="notas", estado='Aprovado')
 
         self.decisao.padraoUtilizado.create(nome="padrao", aliase="aliase", contexto="contexto",
                                             problema="problema", vantagens="vantagens", desvantagens="desvantagens",
@@ -136,9 +132,11 @@ class PaginaPesquisa(TestCase):
         c = Client()
         response = c.get('/pesquisar/decisao/1.html')
         self.assertEqual(response.status_code, 200)
+
         ##teste gerar pdf
         response = c.get('/gerarpdfdecisao/?id=1')
         self.assertEqual(response.status_code, 200)
+
         ##teste historico
         response = c.get('/historico/?id=1')
         self.assertEqual(response.status_code, 200)
@@ -195,4 +193,32 @@ class PaginaPesquisa(TestCase):
                                                             'motivacao':'motivacao', 'tipoDeDecisao':1, 'escopo':'escopo', 'hipoteses':'hipoteses',
                                                             'restricoes':'restricoes', 'alternativas':'alternativas', 'implicacoes':'implicacoes',
                                                             'necessidades':'necessidade', 'notas':'notas', 'estado':'Sugerido', '_save':'Salvar'})
+        self.assertEqual(response.status_code, 200)
+
+    def test_cadastro_padrao(self):
+        c = Client()
+        self.tipoPadrao = TipoPadrao.objects.create(nome="tipo de padrao")
+        response = c.post('/admin/siliqua/padrao/add/',{'nome':'padrao', 'aliase':'aliase', 'contexto':'conteto', 'problema':'problema',
+                                                        'vantagens':'vantagens', 'desvantagens':'desvantagens', 'aplicabiliddade':'aplicabilidade',
+                                                        'referencias':'referencias', 'tipoDePadrao':1, '_save':'Salvar'})
+        self.assertEqual(response.status_code, 200)
+
+    def test_cadastrado_tipodecisao(self):
+        c = Client()
+        response = c.post('/admin/siliqua/tipodecisao/add/',{'nome':'tipo de decisao', '_save':'Salvar'})
+        self.assertEqual(response.status_code, 200)
+
+    def test_cadastrado_tipopadrao(self):
+        c = Client()
+        response = c.post('/admin/siliqua/tipopadrao/add/',{'nome':'tipo de padrao', '_save':'Salvar'})
+        self.assertEqual(response.status_code, 200)
+
+    def test_cadastrado_tagdecisao(self):
+        c = Client()
+        response = c.post('/admin/siliqua/tagdecisao/add/',{'nome':'tag de decisao', '_save':'Salvar'})
+        self.assertEqual(response.status_code, 200)
+
+    def test_cadastrado_tagpadrao(self):
+        c = Client()
+        response = c.post('/admin/siliqua/tagpadrao/add/',{'nome':'tag de padrao', '_save':'Salvar'})
         self.assertEqual(response.status_code, 200)

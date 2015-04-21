@@ -113,11 +113,18 @@
       <column name="necessidades" sqlType="TEXT" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="notas" sqlType="TEXT" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="estado" sqlType="VARCHAR(20)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
-      <column name="categoria" sqlType="TEXT" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="cliques" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <primary-key columns="id"/>
       <foreign-key name="#FAKE_siliqua_decisao_1" columns="tipoDeDecisao_id" ref-table="siliqua_tipodecisao" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
       <index name="siliqua_decisao_39c04542" unique="true" columns="tipoDeDecisao_id"/>
+    </table>
+    <table name="siliqua_decisao_categorias" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="decisao_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="tagdecisao_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <index name="siliqua_decisao_categorias_0cc94c56" unique="true" columns="tagdecisao_id"/>
+      <index name="siliqua_decisao_categorias_ce31c7ec" unique="true" columns="decisao_id"/>
     </table>
     <table name="siliqua_decisao_decisaoRelacionada" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
@@ -154,6 +161,14 @@
       <exported-key name="#FAKE_siliqua_decisao_padraoUtilizado_1" table="siliqua_decisao_padraoUtilizado" schema="" catalog="" columns="padrao_id"/>
       <index name="siliqua_padrao_4b351be6" unique="true" columns="tipoDePadrao_id"/>
     </table>
+    <table name="siliqua_padrao_categorias" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="padrao_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="tagpadrao_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <index name="siliqua_padrao_categorias_fc1ef119" unique="true" columns="tagpadrao_id"/>
+      <index name="siliqua_padrao_categorias_ac287086" unique="true" columns="padrao_id"/>
+    </table>
     <table name="siliqua_padrao_padroesRelacionados" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <column name="from_padrao_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
@@ -161,6 +176,16 @@
       <primary-key columns="id"/>
       <index name="siliqua_padrao_padroesRelacionados_914de6ce" unique="true" columns="to_padrao_id"/>
       <index name="siliqua_padrao_padroesRelacionados_c7962236" unique="true" columns="from_padrao_id"/>
+    </table>
+    <table name="siliqua_tagdecisao" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="nome" sqlType="VARCHAR(255)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="siliqua_tagpadrao" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="nome" sqlType="VARCHAR(255)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
     </table>
     <table name="siliqua_tipodecisao" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
